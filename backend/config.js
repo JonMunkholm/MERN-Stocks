@@ -1,1 +1,2 @@
-export const PORT = 5555;
+//replace with other config options
+export const PORT = 5000;
