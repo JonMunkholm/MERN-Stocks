@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const tickerSchema = mongoose.Schema(
+const fetchedTickersSchema = mongoose.Schema(
   {
     cik_str: {
       type: String,
@@ -18,4 +18,4 @@ const tickerSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-export const Ticker = mongoose.model(`Ticker`, tickerSchema);
+export const FetchedTickers = mongoose.model(`FetchedTickers`, fetchedTickersSchema);
