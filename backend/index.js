@@ -2,23 +2,35 @@ import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import { Ticker } from "./models/tickerModel.js";
+import axios from "axios";
 
 const app = express();
 
 //Middleware for parsing request body
 app.use(express.json());
+//Middleware Form URL encoded
+app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (request, response) => {
   console.log(request);
   return response.status(200).send("Hello World!!");
 });
 
-app.post(`/tickers`, async (request, response) => {
+app.get(`/api/tickers`, async (request, response) => {
+  try {
+    const tickers = await Ticker.find({});
+    response.status(200).json(tickers);
+  } catch (error) {
+    response.status(500).json({ message: error.message });
+  }
+});
+
+app.post(`/api/tickers`, async (request, response) => {
   try {
     if (!request.body.cik_str || !request.body.title || !request.body.ticker) {
       return response
         .status(400)
-        .send({ message: `Send all required fields: cik, title, ticker` });
+        .json({ message: `Send all required fields: cik, title, ticker` });
     }
     const newTicker = {
       cik_str: request.body.cik_str,
@@ -28,10 +40,10 @@ app.post(`/tickers`, async (request, response) => {
 
     const tick = await Ticker.create(newTicker);
 
-    return response.status(201).send(tick);
+    return response.status(200).json(tick);
   } catch (error) {
     console.log(error.message);
-    response.status(500).send({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 });
 
